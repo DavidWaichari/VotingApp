@@ -26,9 +26,22 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between">
-                        <h3 class="card-title">{{$title}} Voters List</h3>
-                        <a type="button" class="btn btn-success btn-sm" href="/admin/voters/create">Add Voter</a>
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-6" style="display: flex; justify-content:space-evenly">
+                          <h3 class="card-title">{{$title}} Voters List</h3>
+                          <a type="button" class="btn btn-success btn-sm" style="width: 30%" href="/admin/voters/create">Add Voter</a>
+                        </div>
+                        <div class="col-md-6">
+                          <form action="{{ route('voters.import') }}" method="POST" enctype="multipart/form-data" style="display: flex; align-items:center; justify-content: space-evenly">
+                            @csrf
+                            <input type="file" name="file" class="form-control">
+                            <button type="submit" class="btn btn-primary btn-sm btn-block ml-2">Import Excel</button>
+                        </form>
+                        </div>
+                      </div>
+                          
+                          
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -41,6 +54,7 @@
                                     <th>ID No</th>
                                     <th>Phone Number</th>
                                     <th>Email</th>
+                                    <th>Can Vote</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -53,7 +67,8 @@
                                     <td>{{$voter->id_number}}</td>
                                     <td>{{$voter->phone_number}}</td>
                                     <td>{{$voter->email}}</td>
-                                    <td>
+                                    <td>{{$voter->can_vote}}</td>
+                                    <td style="display:flex; align-items:center;">
                                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default-{{$voter->id}}">
                                             Picture
                                         </button>
@@ -75,6 +90,7 @@
                                     <th>ID No</th>
                                     <th>Phone Number</th>
                                     <th>Email</th>
+                                    <th>Can Vote</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>

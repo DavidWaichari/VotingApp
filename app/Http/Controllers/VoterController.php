@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Imports\VotersImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VoterController extends Controller
 {
@@ -107,6 +109,13 @@ class VoterController extends Controller
         $voter->delete();
 
         return redirect('/admin/voters');
+    }
+
+    public function importVoters(Request $request)
+    {
+        Excel::import(new VotersImport(), request()->file('file'));
+
+        return redirect()->back()->with('success', 'Voters imported successfully.');
     }
 
 }

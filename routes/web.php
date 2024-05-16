@@ -35,6 +35,7 @@ Route::group(['prefix' => '/admin', 'middleware'=> IsAdminMiddleware::class], fu
     Route::resource('/candidates', CandidateController::class);
     Route::get('/voters/registered', [App\Http\Controllers\VoterController::class, 'registeredVoters']);
     Route::get('/voters/unregistered', [App\Http\Controllers\VoterController::class, 'unregisteredVoters']);
+    Route::post('/voters/import', [App\Http\Controllers\VoterController::class, 'importVoters'])->name('voters.import');
     Route::resource('/voters', VoterController::class);
     Route::get('/send_sms', [App\Http\Controllers\AdminController::class, 'sendSMS']);
 });
