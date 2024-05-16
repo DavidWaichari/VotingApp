@@ -57,7 +57,7 @@ onMounted(async() => {
         has_voted.value = true;
     }
     can_vote.value = res.data.can_vote
-    const results = await axios.get('/candidates');
+    const results = await axios.get('/candidates/ajax');
     candidates.value = results.data;
 });
 

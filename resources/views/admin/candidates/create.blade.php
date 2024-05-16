@@ -27,7 +27,7 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="/admin/candidates/store" method="POST" enctype="multipart/form-data">
+        <form action="/admin/candidates" method="POST" enctype="multipart/form-data">
           @csrf
           <div class="card-body">
             <div class="form-group">

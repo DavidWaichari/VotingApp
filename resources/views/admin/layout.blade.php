@@ -103,18 +103,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/admin/registered_voters" class="nav-link">
+            <a href="/admin/voters" class="nav-link">
               <i class="nav-icon fas fa-file"></i>
               <p>
-                Registered Voters
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/admin/unregistered_voters" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Unregistered Voters
+                Voters
               </p>
             </a>
           </li>
@@ -127,6 +119,15 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    @if ($errors->any())
+      <div class="alert alert-danger">
+          <ul>
+              @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+      </div>
+    @endif
     @yield('content')
     @show
   </div>

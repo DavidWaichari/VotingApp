@@ -27,39 +27,7 @@ class AdminController extends Controller
         return view('admin/dashboard',compact('candidates','registered_voters', 'unregistered_voters','votes'));
     }
 
-    public function candidates()
-    {
-        $candidates = Candidate::all();
-        return view('admin/candidates',compact('candidates'));
-    }
-
-    public function createCandidate()
-    {
-        return view('admin/create_candidate');
-    }
-
-    public function saveCandidate(Request $request)
-    {
-        $candidate = Candidate::create($request->all());
-        if ($request->hasFile('picture')) {
-            $candidate->addMedia($request->picture)->toMediaCollection();
-        }
-
-        return redirect('/admin/candidates');
-    }
-
-    public function registeredVoters()
-    {
-        $registered_voters = User::where('can_vote','Yes')->get();
-        return view('admin/registered_voters', compact('registered_voters'));
-    }
-
-    public function unregisteredVoters()
-    {
-        $unregistered_voters = User::where('can_vote','No')->get();
-        return view('admin/unregistered_voters', compact('unregistered_voters'));
-    }
-
+   
     public function sendSMS()
     {
 
@@ -96,8 +64,4 @@ class AdminController extends Controller
         }
     }
 
-    function createVoter()
-    {
-        return view('admin/create_voter');
-    }
 }

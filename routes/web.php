@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdminMiddleware;
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\VoterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +27,14 @@ Route::get('/validate_otp', [App\Http\Controllers\AuthenticationController::clas
 Route::post('/validate_otp', [App\Http\Controllers\AuthenticationController::class, 'validateOtpStore'])->name('validate.otp.store');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/vote', [App\Http\Controllers\HomeController::class, 'vote'])->name('vote');
-Route::get('/candidates', [App\Http\Controllers\HomeController::class, 'fetchCandidates'])->name('candidates');
+Route::get('/candidates/ajax', [App\Http\Controllers\HomeController::class, 'ajaxFetchCandidates']);
 Route::get('/auth_user', [App\Http\Controllers\HomeController::class, 'authUser'])->name('auth.user');
 Route::get('/unauthorized', [App\Http\Controllers\HomeController::class, 'unauthorized'])->name('unauthorized');
 Route::group(['prefix' => '/admin', 'middleware'=> IsAdminMiddleware::class], function () {
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard']);
-    Route::get('/candidates', [App\Http\Controllers\AdminController::class, 'candidates']);
-    Route::get('/candidates/create', [App\Http\Controllers\AdminController::class, 'createCandidate']);
-    Route::get('/registered_voters', [App\Http\Controllers\AdminController::class, 'registeredVoters']);
-    Route::get('/unregistered_voters', [App\Http\Controllers\AdminController::class, 'unregisteredVoters']);
-    Route::post('/candidates/store', [App\Http\Controllers\AdminController::class, 'saveCandidate']);
+    Route::resource('/candidates', CandidateController::class);
+    Route::get('/voters/registered', [App\Http\Controllers\VoterController::class, 'registeredVoters']);
+    Route::get('/voters/unregistered', [App\Http\Controllers\VoterController::class, 'unregisteredVoters']);
+    Route::resource('/voters', VoterController::class);
     Route::get('/send_sms', [App\Http\Controllers\AdminController::class, 'sendSMS']);
-    Route::get('/voters/create', [App\Http\Controllers\AdminController::class, 'createVoter']);
 });

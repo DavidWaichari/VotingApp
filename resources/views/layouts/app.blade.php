@@ -55,6 +55,12 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    @if (Auth::user()->is_admin == 'Yes')  
+                                    <a class="dropdown-item" href="/admin/dashboard">
+                                        {{ __('Go to Admin') }}
+                                    </a>
+                                    @endif
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

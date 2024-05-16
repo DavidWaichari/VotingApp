@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
         <div class="col-sm-6">
-            <h1 class="m-0">Voters</h1>
+            <h1 class="m-0">Add Voter</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Voters</li>
+            <li class="breadcrumb-item active">Add Voter</li>
             </ol>
         </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,16 +27,32 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="/admin/voters/store" method="POST" enctype="multipart/form-data">
+        <form action="/admin/voters" method="POST" enctype="multipart/form-data" autocomplete="off">
           @csrf
           <div class="card-body">
             <div class="form-group">
-              <label for="exampleInputEmail1">Name</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name" value="">
+              <label for="Name">Name</label>
+              <input type="text" class="form-control" id="Name" placeholder="Enter name" name="name" value="" required>
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Description</label>
-              <textarea  class="form-control" id="exampleInputPassword1" placeholder="description" name="description"></textarea>
+              <label for="MemberNumber">Member Number</label>
+              <input type="text" class="form-control" id="MemberNumber" placeholder="Enter member's number" name="member_number" value="">
+            </div>
+            <div class="form-group">
+              <label for="IDNumber">ID Number</label>
+              <input type="text" class="form-control" id="IDNumber" placeholder="Enter ID number" name="id_number" value="">
+            </div>
+            <div class="form-group">
+              <label for="Phonenumber">Phone Number</label>
+              <input type="text" class="form-control" id="Phonenumber" placeholder="Enter phone number" name="phone_number" value="">
+            </div>
+            <div class="form-group">
+              <label for="Email">Email</label>
+              <input type="email" class="form-control" id="Email" placeholder="Enter email" name="email" value="">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" name="can_vote">
+              <label class="form-check-label" for="exampleCheck1">Can vote</label>
             </div>
             <div class="form-group">
               <label for="exampleInputFile">File input</label>

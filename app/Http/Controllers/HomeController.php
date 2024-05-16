@@ -56,10 +56,6 @@ class HomeController extends Controller
         return 'Successfully voted';
     }
     
-    public function fetchCandidates()
-    {
-        return Candidate::all();
-    }
 
     public function authUser()
     {
