@@ -113,9 +113,9 @@ class VoterController extends Controller
 
     public function importVoters(Request $request)
     {
-        Excel::import(new VotersImport(), request()->file('file'));
+        Excel::import(new VotersImport(), $request->file('file'));
 
-        return redirect()->back()->with('success', 'Voters imported successfully.');
+        return redirect()->back()->with('success', 'Voters imported and saved successfully.');
     }
 
 }

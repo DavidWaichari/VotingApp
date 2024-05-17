@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('email')->unique()->nullable();
-            $table->string('id_number')->unique()->nullable();
-            $table->string('phone_number')->unique()->nullable();
+            $table->string('email')->nullable();
+            $table->string('id_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('otp')->nullable();
             $table->enum('is_admin',['Yes', 'No'])->default('No');
             $table->string('member_number')->nullable();
