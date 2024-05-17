@@ -16,7 +16,7 @@ class Candidate extends Model implements HasMedia
         'description'
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'no_of_votes'];
 
 
     public function votes()
@@ -27,5 +27,10 @@ class Candidate extends Model implements HasMedia
     protected function getImageUrlAttribute()
     {
         return $this->getFirstMediaUrl();
+    }
+
+    public function getNoOfVotesAttribute()
+    {
+        return $this->votes->count();
     }
 }

@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $candidates = Candidate::count();
+        $candidates = Candidate::all();
         $registered_voters = User::where('can_vote','yes')->count();
         $unregistered_voters = User::where('can_vote','no')->count();
         $votes = Vote::count();
