@@ -12,7 +12,12 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::all();
+        $all_candidates = Candidate::all();
+        // Sort candidates by the computed no_of_votes attribute in descending order
+        $candidates = $all_candidates->sortByDesc(function($candidate) {
+            return $candidate->no_of_votes;
+        });
+
         return view('admin/candidates/index',compact('candidates'));
     }
 

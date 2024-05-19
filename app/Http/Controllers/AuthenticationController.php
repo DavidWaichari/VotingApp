@@ -14,8 +14,10 @@ class AuthenticationController extends Controller
         if (!$user) {
             return redirect()->back()->withErrors('Member with that ID is not found');
         }
-        //generate otp
-        $otp = mt_rand(1, 10000);
+       // Generate OTP
+        $otp = mt_rand(1, 99999);
+        $otp = sprintf("%04d", $otp);
+        
         $user->otp = $otp;
         $user->save();
         return redirect(route('validate.otp'))->withErrors($otp);

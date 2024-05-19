@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Vote;
+use App\Models\Candidate;
 use App\Imports\VotersImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -23,7 +25,19 @@ class VoterController extends Controller
         elseif ($request->status == 'unregistered') {
             $voters = User::where('can_vote','No')->get();
             $title = 'Unregistered';
+        }elseif ($request->status == 'voted') {
+            $voters = User::all()->filter(function($user) {
+                return $user->has_voted;
+            });
+            $title = 'Has Voted';
+        }elseif ($request->status == 'not_voted') {
+            $voters = User::all()->filter(function($user) {
+                return $user->can_vote && !$user->has_voted;
+            });
+            $title = 'Not Voted';
         }
+        
+        
         return view('admin/voters/index', compact('voters','title'));
     }
 
@@ -116,6 +130,45 @@ class VoterController extends Controller
         Excel::import(new VotersImport(), $request->file('file'));
 
         return redirect()->back()->with('success', 'Voters imported and saved successfully.');
+    }
+
+    public function resultsStreaming()
+    {
+        return view('admin/voters/results_streaming');
+    }
+
+    public function ajaxResultsStreaming()
+    {
+       
+        // Retrieve all candidates
+        $candidates = Candidate::all();
+       
+
+        // Sort candidates by the computed no_of_votes attribute in descending order
+        $sortedCandidates = $candidates->sortByDesc(function($candidate) {
+            return $candidate->no_of_votes;
+        });
+
+        // Convert to array and reset keys (optional)
+        $sortedCandidates = $sortedCandidates->values()->all();
+
+        $registered_voters = User::where('can_vote','yes')->count();
+        $unregistered_voters = User::where('can_vote','no')->count();
+        $all_users = User::all();
+        $voters_count = $all_users->filter->has_voted->count();
+
+        $votes = Vote::count();
+
+        $data = [
+            'candidates' => $sortedCandidates,
+            'registered_voters_count' => $registered_voters,
+            'unregistered_voters_count' => $unregistered_voters,
+            'votes_count' => $votes,
+            'voters_count' => $voters_count
+        ];
+
+        return response()->json($data);
+
     }
 
 }

@@ -20,7 +20,11 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $candidates = Candidate::all();
+        $all_candidates = Candidate::all();
+        // Sort candidates by the computed no_of_votes attribute in descending order
+        $candidates = $all_candidates->sortByDesc(function($candidate) {
+            return $candidate->no_of_votes;
+        });
         $registered_voters = User::where('can_vote','yes')->count();
         $unregistered_voters = User::where('can_vote','no')->count();
         $votes = Vote::count();

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\VoterController;
 
 /*
@@ -32,9 +33,15 @@ Route::get('/auth_user', [App\Http\Controllers\HomeController::class, 'authUser'
 Route::get('/unauthorized', [App\Http\Controllers\HomeController::class, 'unauthorized'])->name('unauthorized');
 Route::group(['prefix' => '/admin', 'middleware'=> IsAdminMiddleware::class], function () {
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard']);
+    Route::get('/elections/{id}/start', [App\Http\Controllers\ElectionController::class, 'startElection']);
+    Route::get('/elections/{id}/stop', [App\Http\Controllers\ElectionController::class, 'stopElection']);
+    Route::resource('/elections', ElectionController::class);
+    Route::resource('/elections', ElectionController::class);
     Route::resource('/candidates', CandidateController::class);
     Route::get('/voters/registered', [App\Http\Controllers\VoterController::class, 'registeredVoters']);
     Route::get('/voters/unregistered', [App\Http\Controllers\VoterController::class, 'unregisteredVoters']);
+    Route::get('/voters/streaming', [App\Http\Controllers\VoterController::class, 'resultsStreaming']);
+    Route::get('/voters/streaming_data', [App\Http\Controllers\VoterController::class, 'ajaxResultsStreaming']);
     Route::post('/voters/import', [App\Http\Controllers\VoterController::class, 'importVoters'])->name('voters.import');
     Route::resource('/voters', VoterController::class);
     Route::get('/send_sms', [App\Http\Controllers\AdminController::class, 'sendSMS']);

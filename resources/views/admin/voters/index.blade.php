@@ -4,12 +4,14 @@
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6" style="display:flex; align-items: center; justify-content:space-between ">
+            <div class="col-sm-9" style="display:flex; align-items: center; justify-content:space-between ">
                 <h1 class="m-0">{{$title}} Voters</h1>
                 <a href="/admin/voters?status=registered" type="button" class="btn btn-success btn-sm">Registered</a>
                 <a href="/admin/voters?status=unregistered" type="button" class="btn btn-secondary btn-sm">Unregistered</a>
+                <a href="/admin/voters?status=voted" type="button" class="btn btn-secondary btn-sm">Voted</a>
+                <a href="/admin/voters?status=not_voted" type="button" class="btn btn-secondary btn-sm">Not Voted</a>
             </div><!-- /.col -->
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">{{$title}} Voters</li>

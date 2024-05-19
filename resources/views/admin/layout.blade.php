@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Voting App</title>
-
-  <!-- Google Font: Source Sans Pro -->
+ 
+<!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/admin-site/plugins/fontawesome-free/css/all.min.css">
@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="/admin-site/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/admin-site/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/admin-site/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -95,6 +96,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="/admin/elections" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+              <p>
+                Elections
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="/admin/candidates" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
@@ -107,6 +116,14 @@
               <i class="nav-icon fas fa-file"></i>
               <p>
                 Voters
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/voters/streaming" class="nav-link">
+              <i class="nav-icon fas fa-bolt"></i>
+              <p>
+                Results Streaming
               </p>
             </a>
           </li>
@@ -139,8 +156,10 @@
             {{ session('error') }}
         </div>
     @endif
-    @yield('content')
-    @show
+    <div id="app">
+      @yield('content')
+      @show
+    </div>
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -206,9 +225,10 @@
 <script src="/admin-site/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="/admin-site/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="/admin-site/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
 <!-- bs-custom-file-input -->
 <script src="/admin-site/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<!-- Scripts -->
+@vite(['resources/sass/app.scss', 'resources/js/app.js'])
 <script>
     $(function () {
       $("#example1").DataTable({
