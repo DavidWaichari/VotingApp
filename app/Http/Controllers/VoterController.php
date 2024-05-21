@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Vote;
 use App\Models\Candidate;
 use App\Imports\VotersImport;
+use App\Models\Election;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class VoterController extends Controller
@@ -132,9 +134,17 @@ class VoterController extends Controller
         return redirect()->back()->with('success', 'Voters imported and saved successfully.');
     }
 
-    public function resultsStreaming()
+    public function resultsStreaming(Request $request)
     {
-        return view('admin/voters/results_streaming');
+        $elections = Election::all();
+        $elections_text = 'All';
+        $election_id = '';
+        if (isset($request->election_id)) {
+           $election = Election::findOrFail($request->election_id);
+           $election_id = $election->id; 
+           $elections_text = $election->position_name.' ['.$election->created_at->year.']';
+        }
+        return view('admin/voters/results_streaming', compact('elections_text', 'elections','election_id'));
     }
 
     public function ajaxResultsStreaming()
@@ -169,6 +179,47 @@ class VoterController extends Controller
 
         return response()->json($data);
 
+    }
+
+    public function vote(Request $request)
+    {
+        $votes = $request->votes;
+        $voter = Auth::user();
+        //check if the user has participated in this election
+        if ($this->userHasVoted($request->election_id)['success']) {
+            return response()->json([
+                'success'=>false,
+                'message'=>'You have already participated in this election'
+            ]);
+        }
+        // Validate request data
+        $request->validate([
+            'votes' => 'required|array',
+            'election_id' => 'required|integer'
+        ]);
+
+        if ($votes) {
+            foreach ($votes as $vote) {
+                Vote::create([
+                    "user_id" => $voter->id,
+                    "candidate_id" => $vote,
+                    "election_id" => $request->election_id
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success'=>true
+        ]);
+    }
+
+    public function userHasVoted($election_id)
+    {
+        $vote = Vote::where('user_id', Auth::user()->id)->where('election_id', $election_id)->first();
+        if ($vote) {
+           return response()->json(['success'=> true]);
+        }
+        return response()->json(['success'=> false]);
     }
 
 }

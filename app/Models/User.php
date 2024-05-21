@@ -33,7 +33,6 @@ class User extends Authenticatable implements HasMedia
         'can_vote'
     ];
 
-    protected $appends = ['has_voted'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -53,13 +52,4 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function getHasVotedAttribute()
-    {
-        $votes = Vote::where('user_id', $this->id)->count();
-        if ($votes > 0) {
-            return true;
-        }
-        return false;
-    }
 }

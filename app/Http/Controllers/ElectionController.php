@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use Illuminate\Http\Request;
 use App\Models\Election;
 use Carbon\Carbon;
@@ -92,5 +93,33 @@ class ElectionController extends Controller
         $election->ended_at = Carbon::now();
         $election->save();
         return redirect()->back()->with('success','Election stopped successfully');
+    }
+
+    public function electionsAjax()
+    {
+        return Election::where('is_active', 'Yes')->with('candidates')->get();
+    }
+
+    public function participate($id)
+    {
+        $election  = Election::findOrFail($id);
+        return view('election', compact('election'));
+    }
+
+    public function electionsAjaxFetch($id)
+    {
+        $election  = Election::findOrFail($id);
+        //check if the election is active
+        if ($election->is_active == 'No') {
+            return response()->json([
+                'success'=>false
+            ]);
+        }
+
+        return response()->json([
+            'success'=>true,
+            'data' => $election->with('candidates')->first()
+        ]
+        );
     }
 }

@@ -31,6 +31,15 @@
           @csrf
           <div class="card-body">
             <div class="form-group">
+              <label>Select</label>
+              <select class="form-control" name="election_id" required>
+                <option value="">Select Election</option>
+                @foreach ($elections as $election)
+                <option  value="{{$election->id}}" {{$election_id == $election->id ? 'selected' :''}}>{{$election->position_name}} | {{$election->created_at->format('m Y')}}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
               <label for="exampleInputEmail1">Name</label>
               <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name" value="">
             </div>

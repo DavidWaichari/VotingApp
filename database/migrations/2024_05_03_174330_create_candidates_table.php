@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('election_id')->nullable();
+            //foreign keys
+            $table->foreign('election_id')->references('id')->on('elections')->onDelete('CASCADE');
             $table->timestamps();
         });
     }

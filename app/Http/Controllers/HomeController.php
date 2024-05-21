@@ -29,32 +29,6 @@ class HomeController extends Controller
     {
         return view('home');
     }
-
-    public function vote(Request $request)
-    {
-        $votes = $request->votes;
-        $voter = Auth::user();
-
-        if ($voter->has_voted) {
-            return 'You have already voted';
-        }
-
-        // Validate request data
-        $request->validate([
-            'votes' => 'required|array',
-        ]);
-
-        if ($votes) {
-            foreach ($votes as $vote) {
-                Vote::create([
-                    "user_id" => $voter->id,
-                    "candidate_id" => $vote
-                ]);
-            }
-        }
-
-        return 'Successfully voted';
-    }
     
 
     public function authUser()

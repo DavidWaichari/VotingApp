@@ -4,10 +4,19 @@
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-        <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
+        <div class="col-sm-8" >
+            <form action="" method="get" action="/admin/dashboard" style="display: flex; align-items:center; justify-content:space-between; padding:10px">
+            <h1 style="margin-right: 10px">Dashboard for {{$election_line}}</h1>
+            <select class="form-control" style="margin-right: 10px" name="election_id">
+                <option value="">Select election</option>
+                @foreach ($elections as $election)
+                <option {{$election_id == $election->id ? 'selected': ''}} value="{{$election->id}}">{{$election->position_name}}</option>
+                @endforeach
+            </select>
+            <button  class="btn btn-primary" type="submit">Select</button>
+        </form>
         </div><!-- /.col -->
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item active">Dashboard v1</li>
@@ -89,47 +98,53 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header border-0">
-                      <h3 class="card-title">Candidates</h3>
+                      <h3 class="card-title">Candidates List for {{$election_line}}</h3>
                     </div>
                     <div class="card-body table-responsive p-0">
-                      <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                          <th class="text-center">SNO</th>
-                          <th>Picture</th>
-                          <th>Name</th>
-                          <th>Description</th>
-                          <th>No of Votes</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($candidates as $candidate)
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
                             <tr>
-                              <td class="text-center">{{$loop->index + 1}}</td>
-                              <td>
-                                @if ($candidate->getFirstMediaUrl())
-                                <img src="{{$candidate->getFirstMediaUrl()}}" alt="No Picture" height="150" width="150">
-                                @else
-                                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="No Picture" height="150" width="150">
-                                @endif
-                              </td>
-                              <td>{{$candidate->name}}</td>
-                              <td>{{$candidate->description}}</td>
-                              
-                              <td>{{$candidate->votes->count()}}</td>
+                              <th class="text-center">SNO</th>
+                              <th>Picture</th>
+                              <th>Name</th>
+                              <th>Position</th>
+                              <th>Description</th>
+                              <th>No of Votes</th>
+                              <th>Election Status</th>
                             </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th class="text-center">S/NO</th>
-                            <th>Picture</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>No of Votes</th>
-                        </tr>
-                        </tfoot>
-                      </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($candidates as $candidate)
+                                <tr>
+                                  <td class="text-center">{{$loop->index + 1}}</td>
+                                  <td>
+                                    @if ($candidate->getFirstMediaUrl())
+                                    <img src="{{$candidate->getFirstMediaUrl()}}" alt="No Picture" height="150" width="150">
+                                    @else
+                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="No Picture" height="150" width="150">
+                                    @endif
+                                  </td>
+                                  <td>{{$candidate->name}}</td>
+                                  <td>{{$candidate->election->position_name}} | {{$candidate->election->created_at->format('m Y')}}</td>
+                                  <td>{{$candidate->description}}</td>
+                                  
+                                  <td>{{$candidate->votes->count()}}</td>
+                                  <td>{{$candidate->election->is_active == 'Yes'? 'Active': 'In Active'}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th class="text-center">S/NO</th>
+                                <th>Picture</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Description</th>
+                                <th>No of Votes</th>
+                                <th>Election Status</th>
+                            </tr>
+                            </tfoot>
+                          </table>
                     </div>
                   </div>
             </div>

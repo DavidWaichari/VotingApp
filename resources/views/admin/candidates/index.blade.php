@@ -25,8 +25,8 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between">
-                  <h3 class="card-title">Candidates List</h3>
-                    <a type="button" class="btn btn-success btn-sm" href="/admin/candidates/create">Add Candidate</a>
+                  <h3 class="card-title">Candidates List for {{$election_text}}</h3>
+                    <a type="button" class="btn btn-success btn-sm" href="/admin/candidates/create?election_id={{$election_id}}">Add Candidate</a>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -36,8 +36,10 @@
                       <th class="text-center">SNO</th>
                       <th>Picture</th>
                       <th>Name</th>
+                      <th>Position</th>
                       <th>Description</th>
                       <th>No of Votes</th>
+                      <th>Election Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -52,9 +54,11 @@
                             @endif
                           </td>
                           <td>{{$candidate->name}}</td>
+                          <td>{{$candidate->election->position_name}} | {{$candidate->election->created_at->format('m Y')}}</td>
                           <td>{{$candidate->description}}</td>
                           
                           <td>{{$candidate->votes->count()}}</td>
+                          <td>{{$candidate->election->is_active == 'Yes'? 'Active': 'In Active'}}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -63,8 +67,10 @@
                         <th class="text-center">S/NO</th>
                         <th>Picture</th>
                         <th>Name</th>
+                        <th>Position</th>
                         <th>Description</th>
                         <th>No of Votes</th>
+                        <th>Election Status</th>
                     </tr>
                     </tfoot>
                   </table>

@@ -13,12 +13,18 @@ class Candidate extends Model implements HasMedia
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'election_id'
     ];
 
     protected $appends = ['image_url', 'no_of_votes'];
 
 
+    public function election()
+    {
+        return $this->belongsTo(Election::class, 'election_id');
+    }
+    
     public function votes()
     {
         return $this->hasMany(Vote::class, 'candidate_id');

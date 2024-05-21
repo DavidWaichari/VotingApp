@@ -7,7 +7,7 @@ use App\Models\Candidate;
 use App\Models\User;
 use App\Models\Vote;
 use AfricasTalking\SDK\AfricasTalking;
-
+use App\Models\Election;
 
 class AdminController extends Controller
 {
@@ -18,17 +18,30 @@ class AdminController extends Controller
     }
 
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $all_candidates = Candidate::all();
+        $elections = Election::orderBy('created_at', 'DESC')->get();
+        $election_line = 'All Elections';
+        $votes = Vote::count();
+        $election_id = '';
+        //check if election_id is set
+        if (isset($request->election_id) && $request->election_id) {
+            $election = Election::findOrFail($request->election_id);
+            $all_candidates = Candidate::where('election_id', $election->id)->get();
+            $election_line = $election->position_name.' Elections';
+            $election_id = $election->id;
+            $votes = Vote::where('election_id',$election->id)->count();
+
+        }
         // Sort candidates by the computed no_of_votes attribute in descending order
         $candidates = $all_candidates->sortByDesc(function($candidate) {
             return $candidate->no_of_votes;
         });
         $registered_voters = User::where('can_vote','yes')->count();
         $unregistered_voters = User::where('can_vote','no')->count();
-        $votes = Vote::count();
-        return view('admin/dashboard',compact('candidates','registered_voters', 'unregistered_voters','votes'));
+
+        return view('admin/dashboard',compact('elections', 'election_id','election_line','candidates','registered_voters', 'unregistered_voters','votes'));
     }
 
    

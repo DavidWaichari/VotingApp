@@ -2,6 +2,6 @@
 
 @section('content')
 <div class="container">
-    <voting-component></voting-component>
+    <elections-component></elections-component>
 </div>
 @endsection

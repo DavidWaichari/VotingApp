@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
         <div class="col-sm-6">
-            <h1 class="m-0">ELections</h1>
+            <h1 class="m-0">Elections</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">ELections</li>
+            <li class="breadcrumb-item active">Elections</li>
             </ol>
         </div><!-- /.col -->
         </div><!-- /.row -->
@@ -70,6 +70,7 @@
                               <button type="button" class="btn btn-warning " data-toggle="modal" data-target="#modal-default-{{$election->id}}">
                                 Delete
                             </button>
+              <a type="button" href="/admin/candidates?election_id={{$election->id}}" class="btn btn-info">Candidates</a>
               @if ($election->is_active == 'No') 
               <a type="button" href="/admin/elections/{{$election->id}}/start" class="btn btn-success">Start Election</a>
               @else
