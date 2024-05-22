@@ -13,7 +13,7 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="/admin/candidates" class="small-box-footer">More info <i
+                    <a :href="`/admin/candidates?election_id=${ election_id }`" class="small-box-footer">More info <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
@@ -135,6 +135,7 @@ const registered_voters_count = ref(0);
 const unregistered_voters_count = ref(0);
 const votes_count = ref(0);
 const voters_count = ref(0);
+const election_id = ref('');
 
 
 
@@ -145,7 +146,9 @@ onMounted(async () => {
 
 const loadData = async () => {
     try {
-        const response = await axios.get('/admin/voters/streaming_data');
+        const query_params = getQueryParams()
+        election_id.value = query_params.election_id;
+        const response = await axios.get('/admin/voters/streaming_data?election_id='+query_params.election_id);
         candidates.value = response.data.candidates;
         registered_voters_count.value = response.data.registered_voters_count;
         unregistered_voters_count.value = response.data.unregistered_voters_count;
@@ -155,4 +158,19 @@ const loadData = async () => {
         console.error("Error loading data:", error);
     }
 };
+const getQueryParams = () =>{
+    const query = window.location.search.substring(1);
+  if (!query) {
+    return {
+        'election_id':''
+    };  // Return an empty object if there are no query parameters
+  }
+
+  const params = {};
+  query.split("&").forEach(part => {
+    const [key, value] = part.split("=");
+    params[key] = decodeURIComponent(value);
+  });
+  return params;
+}
 </script>

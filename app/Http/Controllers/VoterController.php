@@ -147,27 +147,38 @@ class VoterController extends Controller
         return view('admin/voters/results_streaming', compact('elections_text', 'elections','election_id'));
     }
 
-    public function ajaxResultsStreaming()
+    public function ajaxResultsStreaming(Request $request)
     {
        
+        
         // Retrieve all candidates
         $candidates = Candidate::all();
-       
-
+        // Convert to array and reset keys (optional)
+        
+        $registered_voters = User::where('can_vote','yes')->count();
+        $unregistered_voters = User::where('can_vote','no')->count();
+        $all_users = User::all();
+        $voters_count = Vote::all()->pluck('user_id')->unique()->count();;
+        
+        $votes = Vote::count();
+        
+        //check if there is an election filter
+        if (isset($request->election_id)) {
+            $candidates = Candidate::where('election_id', $request->election_id)->get();
+            $voters_count = 0 ;
+            $votes = Vote::where('election_id', $request->election_id)->count();
+            //get voters count
+            foreach ($all_users as $user) {
+                if ($this->userHasVoted($request->election_id, $user)->getData()->success) {
+                   $voters_count ++ ;
+                }
+            }
+        }
         // Sort candidates by the computed no_of_votes attribute in descending order
         $sortedCandidates = $candidates->sortByDesc(function($candidate) {
             return $candidate->no_of_votes;
         });
-
-        // Convert to array and reset keys (optional)
         $sortedCandidates = $sortedCandidates->values()->all();
-
-        $registered_voters = User::where('can_vote','yes')->count();
-        $unregistered_voters = User::where('can_vote','no')->count();
-        $all_users = User::all();
-        $voters_count = $all_users->filter->has_voted->count();
-
-        $votes = Vote::count();
 
         $data = [
             'candidates' => $sortedCandidates,
@@ -213,13 +224,22 @@ class VoterController extends Controller
         ]);
     }
 
-    public function userHasVoted($election_id)
+    public function userHasVoted($election_id, $user = null)
     {
-        $vote = Vote::where('user_id', Auth::user()->id)->where('election_id', $election_id)->first();
-        if ($vote) {
-           return response()->json(['success'=> true]);
+        // Use the provided user or default to the authenticated user
+        $user = $user ?? Auth::user();
+    
+        if (!$user) {
+            // Handle case where there is no authenticated user and no user provided
+            return response()->json(['success' => false, 'message' => 'No user specified'], 400);
         }
-        return response()->json(['success'=> false]);
+    
+        $vote = Vote::where('user_id', $user->id)->where('election_id', $election_id)->first();
+        if ($vote) {
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
     }
+    
 
 }
