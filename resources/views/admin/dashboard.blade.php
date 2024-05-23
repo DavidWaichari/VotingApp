@@ -5,16 +5,22 @@
     <div class="container-fluid">
         <div class="row mb-2">
         <div class="col-sm-8" >
-            <form action="" method="get" action="/admin/dashboard" style="display: flex; align-items:center; justify-content:space-between; padding:10px">
-            <h1 style="margin-right: 10px">Dashboard for {{$election_line}}</h1>
-            <select class="form-control" style="margin-right: 10px" name="election_id">
-                <option value="">Select election</option>
-                @foreach ($elections as $election)
-                <option {{$election_id == $election->id ? 'selected': ''}} value="{{$election->id}}">{{$election->position_name}}</option>
-                @endforeach
-            </select>
-            <button  class="btn btn-primary" type="submit">Select</button>
-        </form>
+            <div class="row">
+                <div class="col-md-6">
+
+                    <h1 style="margin-right: 10px">Dashboard for {{$election_line}}</h1>
+                </div>
+                <div class="col-md-6">
+                    <form action="" method="get" style="display: flex; align-items:center; justify-content:space-between; padding:10px">
+                        <select class="form-control" style="margin-right: 10px" name="election_id" id="electionId">
+                            <option value="">Select election</option>
+                            @foreach ($elections as $election)
+                            <option {{$election_id == $election->id ? 'selected': ''}} value="{{$election->id}}">{{$election->position_name}}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
+            </div> 
         </div><!-- /.col -->
         <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
@@ -121,7 +127,7 @@
                                     @if ($candidate->getFirstMediaUrl())
                                     <img src="{{$candidate->getFirstMediaUrl()}}" alt="No Picture" height="150" width="150">
                                     @else
-                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="No Picture" height="150" width="150">
+                                    <img src="/assets/img/user_image.png" alt="No Picture" height="150" width="150">
                                     @endif
                                   </td>
                                   <td>{{$candidate->name}}</td>
@@ -153,4 +159,16 @@
     </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('#electionId').on('change', function() {
+        var selectedValue = $(this).val(); // Get the selected value from the dropdown
+        var newUrl = '/admin/dashboard?election_id=' + selectedValue; // Construct the new URL
+        window.location.href = newUrl; // Redirect to the new URL
+    });
+});
+</script>
 @endsection

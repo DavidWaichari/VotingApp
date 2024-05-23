@@ -18,25 +18,54 @@ class VoterController extends Controller
      */
     public function index(Request $request)
     {
+       
         $voters = User::all();
-        $title = 'All';
+        $all_users = User::all();
+        $title = 'All Voters';
         if ($request->status == 'registered') {
             $voters = User::where('can_vote','Yes')->get();
-            $title = 'Registered';
+            $title = 'Voters Registered';
         }
         elseif ($request->status == 'unregistered') {
             $voters = User::where('can_vote','No')->get();
-            $title = 'Unregistered';
+            $title = 'Voters Unregistered';
         }elseif ($request->status == 'voted') {
-            $voters = User::all()->filter(function($user) {
-                return $user->has_voted;
-            });
-            $title = 'Has Voted';
+            $title = 'Voters Voted in all elections';
+            $voters = [];
+            foreach ($all_users as $voter) {
+                if ($this->userHasVoted('', $voter)->getData()->success) {
+                    array_push($voters, $voter);
+                }
+            }
+            if (isset($request->election_id)) {
+                $election = Election::find($request->election_id);
+                $title = 'Voters Voted in '. $election->position_name.' ['.$election->created_at->year.']'. ' elections';
+                $voters = [];
+                foreach ($all_users as $voter) {
+                    if ($this->userHasVoted($request->election_id, $voter)->getData()->success) {
+                        array_push($voters, $voter);
+                    }
+                }
+            }
+           
         }elseif ($request->status == 'not_voted') {
-            $voters = User::all()->filter(function($user) {
-                return $user->can_vote && !$user->has_voted;
-            });
-            $title = 'Not Voted';
+            $title = 'Voters Not Voted in all elections';
+            $voters = [];
+            foreach ($all_users as $voter) {
+                if (!$this->userHasVoted('', $voter)->getData()->success) {
+                    array_push($voters, $voter);
+                }
+            }
+            if (isset($request->election_id)) {
+                $election = Election::find($request->election_id);
+                $title = 'Voters not voted in '. $election->position_name.' ['.$election->created_at->year.']'. ' elections';
+                $voters = [];
+                foreach ($all_users as $voter) {
+                    if (!$this->userHasVoted($request->election_id, $voter)->getData()->success) {
+                        array_push($voters, $voter);
+                    }
+                }
+            }
         }
         
         
@@ -158,19 +187,30 @@ class VoterController extends Controller
         $registered_voters = User::where('can_vote','yes')->count();
         $unregistered_voters = User::where('can_vote','no')->count();
         $all_users = User::all();
-        $voters_count = Vote::all()->pluck('user_id')->unique()->count();;
-        
         $votes = Vote::count();
+        $voters_count = 0 ;
+        $not_voted_count = 0;
+
+        foreach ($all_users as $user) {
+            if ($this->userHasVoted('', $user)->getData()->success) {
+               $voters_count ++ ;
+            }else{
+                $not_voted_count ++ ;
+            }
+        }
         
         //check if there is an election filter
         if (isset($request->election_id)) {
             $candidates = Candidate::where('election_id', $request->election_id)->get();
             $voters_count = 0 ;
+            $not_voted_count = 0;
             $votes = Vote::where('election_id', $request->election_id)->count();
             //get voters count
             foreach ($all_users as $user) {
                 if ($this->userHasVoted($request->election_id, $user)->getData()->success) {
                    $voters_count ++ ;
+                }else{
+                    $not_voted_count ++ ;
                 }
             }
         }
@@ -185,7 +225,8 @@ class VoterController extends Controller
             'registered_voters_count' => $registered_voters,
             'unregistered_voters_count' => $unregistered_voters,
             'votes_count' => $votes,
-            'voters_count' => $voters_count
+            'voters_count' => $voters_count,
+            'not_voted_count' =>$not_voted_count
         ];
 
         return response()->json($data);
@@ -197,7 +238,7 @@ class VoterController extends Controller
         $votes = $request->votes;
         $voter = Auth::user();
         //check if the user has participated in this election
-        if ($this->userHasVoted($request->election_id)['success']) {
+        if ($this->userHasVoted($request->election_id, $voter)->getData()->success) {
             return response()->json([
                 'success'=>false,
                 'message'=>'You have already participated in this election'
@@ -224,7 +265,7 @@ class VoterController extends Controller
         ]);
     }
 
-    public function userHasVoted($election_id, $user = null)
+    public function userHasVoted($election_id = null, $user = null)
     {
         // Use the provided user or default to the authenticated user
         $user = $user ?? Auth::user();
@@ -233,8 +274,10 @@ class VoterController extends Controller
             // Handle case where there is no authenticated user and no user provided
             return response()->json(['success' => false, 'message' => 'No user specified'], 400);
         }
-    
-        $vote = Vote::where('user_id', $user->id)->where('election_id', $election_id)->first();
+        $vote = Vote::where('user_id', $user->id)->first();
+        if ($election_id) {
+            $vote = Vote::where('user_id', $user->id)->where('election_id', $election_id)->first();
+        }
         if ($vote) {
             return response()->json(['success' => true]);
         }

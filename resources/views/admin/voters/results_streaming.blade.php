@@ -6,14 +6,13 @@
         <div class="row mb-2">
         <div class="col-sm-6">
             <h1 class="m-0">Live Results for {{$elections_text}} Elections</h1>
-            <form action="" method="get" action="/admin/voters/streaming" style="display: flex; align-items:center; justify-content:space-between; padding:10px">
-                <select class="form-control" style="margin-right: 10px" name="election_id">
+            <form action="" method="get" style="display: flex; align-items:center; justify-content:space-between; padding:10px">
+                <select class="form-control" style="margin-right: 10px" name="election_id" id="electionId">
                     <option value="">Select election</option>
                     @foreach ($elections as $election)
                     <option {{$election_id == $election->id ? 'selected': ''}} value="{{$election->id}}">{{$election->position_name}}</option>
                     @endforeach
                 </select>
-                <button  class="btn btn-primary" type="submit">Select</button>
             </form>
         </div><!-- /.col -->
         <div class="col-sm-6">
@@ -34,4 +33,16 @@
         </results-component>
     </section>
     <!-- /.content -->
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('#electionId').on('change', function() {
+        var selectedValue = $(this).val(); // Get the selected value from the dropdown
+        var newUrl = '/admin/voters/streaming?election_id=' + selectedValue; // Construct the new URL
+        window.location.href = newUrl; // Redirect to the new URL
+    });
+});
+</script>    
 @endsection

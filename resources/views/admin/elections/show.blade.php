@@ -71,6 +71,8 @@
                                 Delete
                             </button>
               <a type="button" href="/admin/candidates?election_id={{$election->id}}" class="btn btn-info">Candidates</a>
+              <a type="button" href="/admin/voters?election_id={{$election->id}}&status=voted" class="btn btn-secondary">Voted</a>
+              <a type="button" href="/admin/voters?election_id={{$election->id}}&status=not_voted" class="btn btn-primary">Not voted</a>
               @if ($election->is_active == 'No') 
               <a type="button" href="/admin/elections/{{$election->id}}/start" class="btn btn-success">Start Election</a>
               @else

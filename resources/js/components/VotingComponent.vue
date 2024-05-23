@@ -5,7 +5,7 @@
         <div class="col"  v-for="(item, index) in candidates" :key="item.id" v-if="election.is_active === 'Yes' && has_voted === false">
             <div class="card" >
                 <img v-if="item.image_url" :src="item.image_url" />
-                <img v-else src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+                <img v-else src="/assets/img/user_image.png" />
                 <div class="card-body">
                     <h3 class="text-center">{{item.name}}</h3>
                     <div class="align-items-center">

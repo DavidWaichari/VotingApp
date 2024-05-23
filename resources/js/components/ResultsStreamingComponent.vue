@@ -34,23 +34,7 @@
                 </div>
             </div>
             <!-- ./col -->
-            <div class="col-lg-3 col-4">
-                <!-- small box -->
-                <div class="small-box bg-purple">
-                    <div class="inner">
-                        <h3>{{ voters_count }}</h3>
-
-                        <p>Voters Voted</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                    <a href="/admin/voters?status=registered" class="small-box-footer">More info <i
-                            class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-4">
+            <div class="col-lg-2 col-4">
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
@@ -68,7 +52,43 @@
             <!-- ./col -->
             <div class="col-lg-2 col-4">
                 <!-- small box -->
+                <div class="small-box bg-purple">
+                    <div class="inner">
+                        <h3>{{ voters_count }}</h3>
+
+                        <p>Voters Voted</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a v-if="election_id" :href="`/admin/voters?election_id=${election_id}&status=voted`" class="small-box-footer">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                    <a v-else href="/admin/voters?status=voted" class="small-box-footer">More info <i
+                    class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-2 col-4">
+                <!-- small box -->
                 <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ not_voted_count }}</h3>
+
+                        <p>Voters Not voted</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a v-if="election_id" :href="`/admin/voters?election_id=${election_id}&status=not_voted`" class="small-box-footer">More info <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                    <a v-else href="/admin/voters?status=not_voted" class="small-box-footer">More info <i
+                    class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-2 col-4">
+                <!-- small box -->
+                <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{ votes_count }}</h3>
 
@@ -103,7 +123,8 @@
                             <tr v-for="(candidate, index) in candidates">
                               <td class="text-center">{{ index + 1 }}</td>
                               <td>
-                                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="No Picture" height="50" width="50">
+                                <img v-if="candidate.image_url" :src="candidate.image_url" alt="No Picture" height="50" width="50">
+                                <img v-if="!candidate.image_url" src="/assets/img/user_image.png" alt="No Picture" height="50" width="50">
                               </td>
                               <td>{{candidate.name}}</td>
                               <td style="font-weight: bolder; font-family: 'Times New Roman', Times, serif; font-size: 30px;">{{ candidate.no_of_votes }}</td>
@@ -135,6 +156,7 @@ const registered_voters_count = ref(0);
 const unregistered_voters_count = ref(0);
 const votes_count = ref(0);
 const voters_count = ref(0);
+const not_voted_count = ref(0);
 const election_id = ref('');
 
 
@@ -154,6 +176,7 @@ const loadData = async () => {
         unregistered_voters_count.value = response.data.unregistered_voters_count;
         votes_count.value = response.data.votes_count;
         voters_count.value = response.data.voters_count;
+        not_voted_count.value = response.data.not_voted_count;
     } catch (error) {
         console.error("Error loading data:", error);
     }

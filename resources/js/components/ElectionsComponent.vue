@@ -6,25 +6,25 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col" v-for="election in elections" v-if="auth_user.can_vote === 'Yes'">
             <div class="card" >
-                <div class="card-body">
-                    <div class="alert alert-warning alert-dismissible">
-                  <h1 class="text-center"><i class="icon fas fa-ban"></i> {{ election.position_name }} </h1>
-                </div>
-                    <h3 class="text-center">{{ election.candidates.length }} Candidates</h3>
+                <div class="card-body alert alert-warning">
+                    <div class="alert alert-success alert-dismissible">
+                        <h1 class="text-center"><i class="icon fas fa-ban"></i> {{ election.position_name }} </h1>
+                    </div>
+                    <h4 class="text-center">{{ election.candidates.length }} Candidates</h4>
+                    <h4 class="text-center">{{ election.maximum_selections }} Maximum Selections</h4>
                     <div class="align-items-center">
                         <div>
-                            <a   :href="`/elections/${ election.id }/participate`" type="button"  class="w-100 btn btn-lg btn-block btn-primary">
-                                <p style="vertical-align: inherit;">
-                                <p style="vertical-align: inherit; font-weight: bolder; font-size: 34PX;">PARTICIPATE</p>
-                            </p>
+                            <a v-if="!election.auth_user_has_voted"  :href="`/elections/${ election.id }/participate`" type="button"  class="w-100 btn btn-lg btn-block btn-primary">
+                            <p style="vertical-align: inherit; font-weight: bolder; font-size: 34PX;">PARTICIPATE</p>
                             </a>
+                            <button v-if="election.auth_user_has_voted" disabled class="w-100 btn btn-lg btn-block btn-success">
+                            <p style="vertical-align: inherit; font-weight: bolder; font-size: 34PX;">PARTICIPATED</p>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        
     </div>
     <div class="alert alert-danger m-5" role="alert" v-if="auth_user.can_vote === 'No'">
             <h1 class="text-center">You are not permitted to vote</h1>

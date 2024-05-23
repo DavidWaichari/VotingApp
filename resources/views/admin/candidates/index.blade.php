@@ -50,7 +50,7 @@
                             @if ($candidate->getFirstMediaUrl())
                             <img src="{{$candidate->getFirstMediaUrl()}}" alt="No Picture" height="150" width="150">
                             @else
-                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="No Picture" height="150" width="150">
+                            <img src="/assets/img/user_image.png" alt="No Picture" height="150" width="150">
                             @endif
                           </td>
                           <td>{{$candidate->name}}</td>

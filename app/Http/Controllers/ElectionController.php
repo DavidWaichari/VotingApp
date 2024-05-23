@@ -108,7 +108,8 @@ class ElectionController extends Controller
 
     public function electionsAjaxFetch($id)
     {
-        $election  = Election::findOrFail($id);
+        
+        $election  = $election = Election::with('candidates')->findOrFail($id);
         //check if the election is active
         if ($election->is_active == 'No') {
             return response()->json([
@@ -118,7 +119,7 @@ class ElectionController extends Controller
 
         return response()->json([
             'success'=>true,
-            'data' => $election->with('candidates')->first()
+            'data' => $election
         ]
         );
     }
