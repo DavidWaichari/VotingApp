@@ -70,7 +70,11 @@ class CandidateController extends Controller
      */
     public function edit(string $id)
     {
-        //
+       
+        $candidate = Candidate::findOrFail($id); 
+        $elections = Election::where('is_active', 'No')->orderBy('created_at', 'DESC')->get();
+        $election_id = $candidate->election->id;
+        return view('admin/candidates/edit',compact('elections', 'election_id', 'candidate'));
     }
 
     /**
@@ -78,7 +82,15 @@ class CandidateController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $candidate = Candidate::find($id);
+        $candidate->update($request->all());
+        if ($request->hasFile('picture')) {
+            // Clear the existing media in the default media collection
+            $candidate->clearMediaCollection();
+            $candidate->addMedia($request->picture)->toMediaCollection();
+        }
+
+        return redirect('/admin/candidates?election_id='.$candidate->election_id)->with('success', 'Successfully added candidate');
     }
 
     /**

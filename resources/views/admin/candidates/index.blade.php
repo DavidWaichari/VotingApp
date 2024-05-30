@@ -40,6 +40,7 @@
                       <th>Description</th>
                       <th>No of Votes</th>
                       <th>Election Status</th>
+                      <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -59,6 +60,17 @@
                           
                           <td>{{$candidate->votes->count()}}</td>
                           <td>{{$candidate->election->is_active == 'Yes'? 'Active': 'In Active'}}</td>
+                          <td style="display:flex; align-items:center; justify-content:space-between">
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default-{{$candidate->id}}">
+                                Picture
+                            </button>
+                            <a type="button" href="{{route('candidates.edit', $candidate->id)}}" class="btn btn-sm btn-rounded btn-warning">Edit</a>
+                            <button class="btn btn-sm btn-rounded btn-danger" onclick="if (confirm('Are you sure you want to delete this candidate?')) { document.getElementById('deleteForm-{{$candidate->id}}').submit(); }">Delete</button>
+                            <form action="{{route('candidates.destroy', $candidate->id)}}" id="deleteForm-{{$candidate->id}}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -71,6 +83,7 @@
                         <th>Description</th>
                         <th>No of Votes</th>
                         <th>Election Status</th>
+                        <th>Actions</th>
                     </tr>
                     </tfoot>
                   </table>
@@ -86,4 +99,32 @@
     <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+
+    @foreach ($candidates as $candidate)
+    <div class="modal fade" id="modal-default-{{$candidate->id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Picture of {{$candidate->name}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  @if ($candidate->getFirstMediaUrl())
+                  <img src="{{$candidate->getFirstMediaUrl()}}" alt="{{$candidate->name}} Picture" style="max-width: 100%; height: auto;">
+                  @else
+                  <img src="/admin-site/dist/img/avatar.png" alt="{{$candidate->name}} Picture" style="max-width: 100%; height: auto;">
+                  @endif
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    @endforeach
 @endsection
