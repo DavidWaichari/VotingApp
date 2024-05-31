@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->enum('is_active',['Yes', 'No'])->default('No');
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 

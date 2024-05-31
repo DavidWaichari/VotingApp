@@ -23,4 +23,6 @@ class Vote extends Model
     {
         return $this->belongsTo(Candidate::class, 'candidate_id');
     }
+
+    
 }

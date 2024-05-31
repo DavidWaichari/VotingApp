@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,8 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Candidate extends Model implements HasMedia
 {
-    use HasFactory ,InteractsWithMedia;
-    use SoftDeletes;
+    use HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
@@ -22,7 +20,6 @@ class Candidate extends Model implements HasMedia
     ];
 
     protected $appends = ['image_url', 'no_of_votes'];
-
 
     public function election()
     {
@@ -41,6 +38,23 @@ class Candidate extends Model implements HasMedia
 
     public function getNoOfVotesAttribute()
     {
-        return $this->votes->count();
+        return $this->votes()->count();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($candidate) {
+            if ($candidate->isForceDeleting()) {
+                $candidate->votes()->forceDelete();
+            } else {
+                $candidate->votes()->delete();
+            }
+        });
+
+        static::restoring(function ($candidate) {
+            $candidate->votes()->withTrashed()->whereNotNull('deleted_at')->restore();
+        });
     }
 }
