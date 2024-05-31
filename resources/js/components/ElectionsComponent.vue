@@ -30,7 +30,7 @@
             <h1 class="text-center">You are not permitted to vote</h1>
         </div>
     </div>
-    <div class="alert alert-danger m-5" role="alert" v-if="elections.length < 1">
+    <div class="alert alert-danger m-5" role="alert" v-if="!active_elections">
         <h1 class="text-center">There are no active elections available at this time.</h1>
     </div>
 </template>
@@ -41,10 +41,14 @@ import { ref, onMounted } from 'vue';
 
 const elections = ref([]);
 const auth_user = ref({});
+const active_elections = ref(true);
 
 onMounted(async() => {
     const response = await axios.get('/elections/ajax');
     elections.value = response.data;
+    if (elections.value.length < 1) {
+        active_elections.value = false;
+    }
     const res = await axios.get('/auth_user');
     auth_user.value = res.data
 });
