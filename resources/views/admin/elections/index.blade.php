@@ -34,6 +34,7 @@
                     <thead>
                     <tr>
                       <th class="text-center">SNO</th>
+                      <th>Election ID</th>
                       <th>Position Name</th>
                       <th>Maximum Selections</th>
                       <th>Is Active</th>
@@ -48,6 +49,7 @@
                         @foreach ($elections as $election)
                         <tr>
                           <td class="text-center">{{$loop->index + 1}}</td>
+                          <td>#{{$election->id}}</td>
                           <td>{{$election->position_name}}</td>
                           <td>{{$election->maximum_selections}}</td>
                           <td>{{$election->is_active}}</td>
@@ -64,6 +66,7 @@
                     <tfoot>
                     <tr>
                       <th class="text-center">SNO</th>
+                      <th>Election ID</th>
                       <th>Position Name</th>
                       <th>Maximum Selections</th>
                       <th>Is Active</th>

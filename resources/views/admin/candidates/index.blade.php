@@ -34,6 +34,7 @@
                     <thead>
                     <tr>
                       <th class="text-center">SNO</th>
+                      <th>Candidate ID</th>
                       <th>Picture</th>
                       <th>Name</th>
                       <th>Position</th>
@@ -47,6 +48,7 @@
                         @foreach ($candidates as $candidate)
                         <tr>
                           <td class="text-center">{{$loop->index + 1}}</td>
+                          <td>#{{$candidate->id}}</td>
                           <td>
                             @if ($candidate->getFirstMediaUrl())
                             <img src="{{$candidate->getFirstMediaUrl()}}" alt="No Picture" height="150" width="150">
@@ -77,6 +79,7 @@
                     <tfoot>
                     <tr>
                         <th class="text-center">S/NO</th>
+                        <th>Candidate ID</th>
                         <th>Picture</th>
                         <th>Name</th>
                         <th>Position</th>

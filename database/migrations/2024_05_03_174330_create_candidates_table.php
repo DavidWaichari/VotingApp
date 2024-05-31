@@ -19,6 +19,7 @@ return new class extends Migration
             //foreign keys
             $table->foreign('election_id')->references('id')->on('elections')->onDelete('CASCADE');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

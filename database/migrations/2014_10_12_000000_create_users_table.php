@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('can_vote',['Yes', 'No'])->default('Yes');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

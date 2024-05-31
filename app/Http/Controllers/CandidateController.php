@@ -98,7 +98,13 @@ class CandidateController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $candidate = Candidate::findOrFail($id); 
+        $election_id = $candidate->election_id;
+        //clear the media as well
+        $candidate->clearMediaCollection();
+        $candidate->delete();
+        return redirect('/admin/candidates?election_id='.$election_id)->with('success', 'Successfully deleted candidate');
+
     }
 
     public function ajaxFetchCandidates()

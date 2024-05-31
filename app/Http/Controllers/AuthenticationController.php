@@ -32,7 +32,7 @@ class AuthenticationController extends Controller
 
         // Send email containing the OTP (assuming a Mail implementation exists)
         if (isset($user->email)) {
-            Mail::to($user->email)->send(new OTPMail($otp));
+            // Mail::to($user->email)->send(new OTPMail($otp));
         }
 
         // Flash the OTP to the session for testing/debugging purposes

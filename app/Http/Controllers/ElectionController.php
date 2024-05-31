@@ -70,7 +70,6 @@ class ElectionController extends Controller
      */
     public function destroy(string $id)
     {
-        return redirect()->back()->withErrors('Deleting an election is not allowed at this time');
         $election  = Election::findOrFail($id);
         $election->delete();
         return redirect(route('elections.index'));
