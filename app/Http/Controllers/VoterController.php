@@ -146,7 +146,6 @@ class VoterController extends Controller
      */
     public function destroy(string $id)
     {
-        return redirect()->back()->withErrors('Deleting is not allowed at this time');
         $voter = User::findOrFail($id);
         if ($voter->is_admin == 'Yes') {
             return redirect()->back()->withErrors('You cannot delete an admin');

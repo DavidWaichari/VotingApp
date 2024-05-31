@@ -5,6 +5,7 @@ use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\VoterController;
+use App\Models\Election;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ use App\Http\Controllers\VoterController;
 */
 
 Route::get('/', function () {
+    $elections = Election::withTrashed()->find(1)->restore();
     return redirect('/login');
     // return view('welcome');
 });
